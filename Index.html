@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dla Mojej Wiki! 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Pacifico&display=swap');
+
+        :root {
+            --kitty-pink: #FFB7CE;
+            --kitty-dark-pink: #FF6694;
+            --kitty-light: #FFF0F5;
+            --kitty-red: #FE001A;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--kitty-light);
+            font-family: "Fredoka", sans-serif;
+            color: #4A4A4A;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: radial-gradient(var(--kitty-pink) 15%, transparent 16%),
+                              radial-gradient(var(--kitty-pink) 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .page.active { display: flex; }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--kitty-pink);
+            border-radius: 30px;
+            padding: 45px 30px 30px 30px;
+            box-shadow: 0 10px 25px rgba(255, 102, 148, 0.2);
+            text-align: center;
+            position: relative;
+            margin: 40px 0 20px 0; /* Увеличили верхний отступ для бантика */
+        }
+
+        /* Тот самый бантик, закрепленный ровно посередине НАД белым дивом */
+        .top-bow {
+            font-size: 3.5rem;
+            position: absolute;
+            top: -45px; /* Выносим его за пределы блока вверх */
+            left: 50%;
+            transform: translateX(-50%); /* Идеальное центрирование */
+            filter: drop-shadow(0px 4px 5px rgba(255, 102, 148, 0.3));
+            z-index: 10;
+            cursor: default;
+            user-select: none;
+            animation: gentle-swing 3s ease-in-out infinite alternate;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--kitty-dark-pink);
+            font-size: 2.5rem;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px #fff;
+        }
+
+        .counter {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            background: var(--kitty-dark-pink);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(255, 102, 148, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .message-box {
+            background: #fff;
+            border: 2px dashed var(--kitty-pink);
+            border-radius: 20px;
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .message-box p { margin: 0 0 15px 0; }
+        .message-box p:last-child { margin-bottom: 0; }
+
+        .heart-btn {
+            background: var(--kitty-dark-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: "Fredoka", sans-serif;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 102, 148, 0.4);
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.02);
+            background: var(--kitty-red);
+        }
+
+        .next-btn {
+            background: transparent;
+            color: var(--kitty-dark-pink);
+            border: 2px solid var(--kitty-dark-pink);
+            padding: 10px 25px;
+            font-size: 1rem;
+            font-family: "Fredoka", sans-serif;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .next-btn:hover {
+            background: rgba(255, 102, 148, 0.1);
+            transform: scale(1.02);
+        }
+
+        .reasons-box {
+            background: #fff;
+            border: 2px dashed var(--kitty-pink);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 380px;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+        }
+
+        .reason-item {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: var(--kitty-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .reason-item:last-child { margin-bottom: 0; }
+        
+        .reason-num {
+            background: var(--kitty-dark-pink);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 55px;
+            text-align: center;
+        }
+
+        .final-alert {
+            background: linear-gradient(135deg, #fff 0%, var(--kitty-light) 100%);
+            border: 3px solid var(--kitty-red);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--kitty-red);
+            font-size: 1.15rem;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(254, 0, 26, 0.2);
+            animation: fadeIn 0.6s ease-out forwards;
+            display: none;
+        }
+
+        /* Анимации */
+        @keyframes gentle-swing {
+            0% { transform: translateX(-50%) rotate(-3deg); }
+            100% { transform: translateX(-50%) rotate(3deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: var(--kitty-dark-pink);
+            font-size: 20px;
+            animation: floatUp 3s linear forwards;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: Main Greeting -->
+    <div id="page1" class="page active">
+        <div class="container">
+            <!-- Бантик сидит прямо по центру на верхней рамке дива -->
+            <div class="top-bow">🎀</div>
+            <h1>Kochanie! 💖</h1>
+            <div class="counter">To już 2 miesiące razem! ✨</div>
+
+            <div class="message-box">
+                <p>Dwa miesiące temu w moim życiu pojawiło się najjaśniejsze i najsłodsze słońce — Ty. Każdy dzień spędzony z Tobą jest pełen radości, ciepła i niesamowitych chwil.</p>
+                <p>Dziękuję Ci za Twój uсьmiech, za Twoje wsparcie i za to, że po prostu jesteś. Sprawiasz, że jestem najszczęśliwszą osobą na świecie!</p>
+                <p style="text-align: center; font-weight: bold; color: var(--kitty-dark-pink); font-size: 1.2rem;">Kocham Cię z całego serduszka! 🐾🎀</p>
+            </div>
+
+            <button class="heart-btn" onclick="createHeart(event)">Kliknij tutaj! 💕</button>
+            <button class="next-btn" onclick="navigateToPage2()">Dlaczego Cię kocham? 📜</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2: 10000 Reasons -->
+    <div id="page2" class="page">
+        <div class="container">
+            <!-- Тут бантик расположен точно так же -->
+            <div class="top-bow">🎀</div>
+            <h1>Nasze Powody... 🌸</h1>
+            <div class="counter" style="background-color: var(--kitty-red);" id="total-counter">Załadowano: 0 powodów</div>
+
+            <div class="reasons-box" id="reasons-container">
+                <!-- Генерируется через JS -->
+            </div>
+            
+            <div id="final-message" class="final-alert">
+                Oczywiście to jeszcze nie wszystko... Moja miłość do Ciebie ma nieskończenie wiele powodów! ♾️❤️
+            </div>
+
+            <button class="heart-btn" onclick="createHeart(event); handleLoadRequest();" id="more-btn" style="margin-top: 15px;">Załaduj kolejne 100 powodów! 🚀</button>
+            <button class="next-btn" onclick="navigateToPage1()">Powrót 🐾</button>
+        </div>
+    </div>
+
+    <script>
+        const coreBases = [
+            "Twój uśmiech potrafi rozjaśnić nawet najbardziej pochmurny dzień",
+            "Przy Tobie czuję się niesamowicie bezpiecznie i spokojnie",
+            "Masz najsłodszy głos na świecie, którego mógłbym słuchać bez przerwy",
+            "Sposób, w jaki na mnie patrzysz, sprawia, że moje serce bije szybciej",
+            "Twoje ramiona to moje ulubione miejsce na całej ziemi",
+            "Zawsze wiesz, jak mnie wesprzeć, kiedy mam gorszy moment",
+            "Uwielbiam to, jak bardzo jesteś opiekuńcza i wrażliwa",
+            "Z Tobą nawet zwykłe milczenie jest wyjątkowe i pełne komfortu",
+            "Masz najpiękniejsze oczy, w których całkowicie tonę za każdym razem",
+            "Sprawiasz, że chcę być lepszą wersją samego siebie każdego dnia",
+            "Twoje poczucie humoru idealnie pasuje do mojego",
+            "Uwielbiam Twoje przytulaski — są najlepszym lekarstwem na zmęczenie",
+            "Sposób, w jaki się śmiejesz, jest po prostu uroczy i magnetyczny",
+            "Zawsze potrafisz podnieść mnie na duchu jednym małym gestem",
+            "Cenię to, że możemy rozmawiać o wszystkim bez żadnych barier",
+            "Każda chwila spędzona obok Ciebie staje się najlepszym wspomnieniem",
+            "Masz cudowne serduszko i niesamowitą empatię do świata",
+            "Twoja obecność zamienia każde miejsce w prawdziwy, ciepły dom",
+            "Uwielbiam to, jak dbasz o mnie i jak bardzo się troszczysz",
+            "Jesteсь nie tylko moją dziewczyną, ale też moim najbliższym przyjacielem",
+            "Dzięki Tobie wiem, że prawdziwa miłość i idealne dopasowanie istnieją",
+            "Twoje dłonie idealnie pasują do moich, kiedy spacerujemy razem",
+            "Potrafisz dostrzec we mnie rzeczy, których sam wcześniej nie zauważałem",
+            "Uwielbiam planować z Tobą przyszłość i marzyć o wspólnych chwilach",
+            "Czuję ogromne szczęście, kiedy budzę się i wiem, że jesteś obok",
+            "Każdy Twój dotyk wywołuje u mnie masę pozytywnych emocji",
+            "Doceniam to, jak potrafisz słuchać moich nawet najbardziej szalonych myśli",
+            "Uwielbiam patrzeć, jak słodko zasypiasz i jak odpoczywasz",
+            "Sprawiasz, że nawet najzwyklejsza herbata pita razem smakuje wyjątkowo",
+            "Czuję niesamowity komfort psychiczny, wiedząc, że mam Ciebie",
+            "Twoja wiara we mnie daje mi ogromną siłę do pokonywania trudności",
+            "Uwielbiam Twój zapach, który zostaje na moich ubraniach",
+            "Z Tobą czuję, że mogę być w stu procentach sobą, bez udawania",
+            "Jesteś moim najpiękniejszym początkiem i końcem każdego dnia",
+            "Twoja czułość sprawia, że świat staje się o wiele lepszy",
+            "Uwielbiam, kiedy niespodziewanie wysyłasz mi miłe wiadomości",
+            "Sposób, w jaki potrafisz mnie rozśmieszyć do łez, jest niesamowity",
+            "Zawsze potrafisz stworzyć wokół nas atmosferę pełną miłości",
+            "Dwa miesiące z Tobą minęły jak piękny sen, z którego nie chcę się budzić",
+            "Podoba mi się Twoja mądrość życiowa i to, jak patrzysz na świat",
+            "Każda sekunda spędzona razem ma dla mnie ogromną wartość",
+            "Uwielbiam to, jak potrafisz mnie zaskakiwać swoimi pomysłami",
+            "Twoje ciepło potrafi roztopić każdy mój stres i zmęczenie",
+            "Kocham w Tobie absolutnie wszystko — od charakteru po każdy drobny gest"
+        ];
+
+        const complements = [
+            "ponieważ wnosisz w moje życie magię",
+            "co sprawia, że czuję się najszczęśliwszym facetem",
+            "i za to dziękuję Ci każdego pojedynczego dnia",
+            "bo jesteś moim absolutnym i najważniejszym skarbem",
+            "i to jest po prostu niesamowite uczucie",
+            "co udowadnia mi, jak bardzo jesteśmy dla siebie stworzeni",
+            "i z każdym dniem to uczucie staje się coraz silniejsze",
+            "ponieważ potrafisz odmienić każdy mój dzień na lepsze",
+            "i bez tego nie wyobrażam sobie już mojego świata",
+            "co daje mi kopa do działania i mnóstwo radości",
+            "bo Twoje serce jest najwspanialszym miejscem",
+            "i uwielbiam to uczucie bliskości, które nas łączy",
+            "ponieważ jesteś najjaśniejszą gwiazdą na moim niebie",
+            "i to sprawia, że moje życie nabrało zupełnie nowych barw"
+        ];
+
+        const emotionalEndings = [ "💖", "✨", "🐾", "🌸", "🎀", "🧸", "🍯", "💘", "🔮", "💎" ];
+
+        let currentReasonCount = 0;
+        const container = document.getElementById('reasons-container');
+        const totalCounter = document.getElementById('total-counter');
+        const moreBtn = document.getElementById('more-btn');
+        const finalMessage = document.getElementById('final-message');
+
+        function getReasonText(index) {
+            const base = coreBases[index % coreBases.length];
+            const comp = complements[(index + 3) % complements.length];
+            const end = emotionalEndings[(index * 7) % emotionalEndings.length];
+            
+            if (index < coreBases.length) {
+                return `${base} ${end}`;
+            } else {
+                const prefixes = ["Uwielbiam to, że ", "Cudownie jest wiedzieć, że ", "Każdego dnia doceniam, że ", "To niesamowite, jak "];
+                const pref = prefixes[index % prefixes.length];
+                const lowerBase = base.charAt(0).toLowerCase() + base.slice(1);
+                return `${pref}${lowerBase}, ${comp} ${end}`;
+            }
+        }
+
+        function handleLoadRequest() {
+            if (currentReasonCount >= 10000) return;
+            loadMoreReasons(100);
+        }
+
+        function loadMoreReasons(amount) {
+            const target = currentReasonCount + amount;
+            const fragment = document.createDocumentFragment();
+            
+            while (currentReasonCount < target && currentReasonCount < 10000) {
+                currentReasonCount++;
+                
+                const item = document.createElement('div');
+                item.classList.add('reason-item');
+                
+                const numSpan = document.createElement('span');
+                numSpan.classList.add('reason-num');
+                numSpan.innerText = `#${currentReasonCount}`;
+                
+                const textSpan = document.createElement('span');
+                textSpan.innerText = getReasonText(currentReasonCount - 1);
+                
+                item.appendChild(numSpan);
+                item.appendChild(textSpan);
+                fragment.appendChild(item);
+            }
+            
+            container.appendChild(fragment);
+            totalCounter.innerText = `Załadowano: ${currentReasonCount} powodów ✨`;
+            
+            if (currentReasonCount >= 10000) {
+                finalMessage.style.display = "block";
+                moreBtn.innerText = "Kocham Cię bez końca! ❤️";
+                moreBtn.style.background = "var(--kitty-red)";
+            }
+            
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 30);
+        }
+
+        function navigateToPage2() {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+            if (currentReasonCount === 0) {
+                loadMoreReasons(300);
+            }
+        }
+
+        function navigateToPage1() {
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        }
+
+        function createHeart(event) {
+            const activePage = document.querySelector('.page.active .container');
+            for(let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '💖';
+                
+                const containerRect = activePage.getBoundingClientRect();
+                const x = event.clientX - containerRect.left + (Math.random() * 60 - 30);
+                const y = event.clientY - containerRect.top - 20;
+                
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+                heart.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                
+                activePage.appendChild(heart);
+                setTimeout(() => { heart.remove(); }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
